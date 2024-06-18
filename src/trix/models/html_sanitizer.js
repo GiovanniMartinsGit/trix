@@ -5,7 +5,7 @@ import { nodeIsAttachmentElement, removeNode, tagName, walkTree } from "trix/cor
 const DEFAULT_ALLOWED_ATTRIBUTES = "style href src width height language class".split(" ")
 const DEFAULT_FORBIDDEN_PROTOCOLS = "javascript:".split(" ")
 const DEFAULT_FORBIDDEN_ELEMENTS = "script iframe form noscript".split(" ")
-
+const ELEMENTS_TO_KEEP = "align-center align-left align-right".split(" ")
 export default class HTMLSanitizer extends BasicObject {
   static sanitize(html, options) {
     const sanitizer = new this(html, options)
@@ -92,6 +92,7 @@ export default class HTMLSanitizer extends BasicObject {
 
   elementIsRemovable(element) {
     if (element?.nodeType !== Node.ELEMENT_NODE) return
+    if (ELEMENTS_TO_KEEP.includes(tagName(element))) return false
     return this.elementIsForbidden(element) || this.elementIsntSerializable(element)
   }
 
